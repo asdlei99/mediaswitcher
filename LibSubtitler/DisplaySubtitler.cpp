@@ -27,11 +27,26 @@ DisplaySubtitler::DisplaySubtitler(void)
 	m_bInit = false;
 	m_CanvasWidth = 0;
 	m_CanvasHeight = 0;
+	
+	m_Antialias = false;	
+	
+	m_Dlist = NULL;
+	m_Pfc = NULL;
+	m_Render = NULL;	
 }
 
 DisplaySubtitler::~DisplaySubtitler(void)
 {
-	delete pdlist;
+	if(m_Dlist)
+		delete m_Dlist;
+		
+	if(m_Pfc)
+		delete m_Pfc;
+		
+	if(m_Render)
+		delete m_Render;
+		
+	DeleteDC(m_HdcAntialias);
 }
 
 long (*g_pGetHostVerInfo)(char *buf, int len);
@@ -50,42 +65,41 @@ void DisplaySubtitler::Init(int width, int height)
 
 	g_pGetHostVerInfo = NullGetHostVerInfo;
 
-	fAntialias = true;
+	m_Antialias = true;
 
 	g_bUseMMX = true;
 
-	bAssumeGDISucks = (LONG)GetVersion() < 0;
+	bool bAssumeGDISucks = (LONG)GetVersion() < 0;
 
-	pdlist = new DialogueList();
-	if (!pdlist)
+	m_Dlist = new DialogueList();
+	if (!m_Dlist)
 		return;
 
-	nWrapMode = 0;
+	int nWrapMode = 0;
 
-	pRender = new RenderList(128, 1.4, bAssumeGDISucks, (RenderList::eWrapMode)nWrapMode);
+	m_Render = new RenderList(128, 1.4, bAssumeGDISucks, (RenderList::eWrapMode)nWrapMode);
 
-	if (!pRender)
+	if (!m_Render)
 		return;
 
 	// If Antialiasing is enabled, create a display context for us to draw text
 	// paths in.
 
-	if (fAntialias) {
-		hdcAntialias = CreateCompatibleDC(NULL);
-		SetTextAlign(hdcAntialias, TA_TOP|TA_LEFT);
-		SetTextColor(hdcAntialias, 0xffffff);
-		SetBkColor(hdcAntialias, 0);
-		SetBkMode(hdcAntialias, TRANSPARENT);
+	if (m_Antialias) {
+		m_HdcAntialias = CreateCompatibleDC(NULL);
+		SetTextAlign(m_HdcAntialias, TA_TOP|TA_LEFT);
+		SetTextColor(m_HdcAntialias, 0xffffff);
+		SetBkColor(m_HdcAntialias, 0);
+		SetBkMode(m_HdcAntialias, TRANSPARENT);
 	}
 
-	pfc = new FontCache(hdcAntialias, 8);
-	if (!pfc)
+	m_Pfc = new FontCache(m_HdcAntialias, 8);
+	if (!m_Pfc)
 		return;
 
 
 	m_CanvasWidth = width;
 	m_CanvasHeight = height;
-
 }
 
 void DisplaySubtitler::SelectStyle(const DialogueStyleDefinition* style)
@@ -116,18 +130,15 @@ void DisplaySubtitler::SelectStyle(const DialogueStyleDefinition* style)
 	pdi->nYWindowPos	= 0;
 	pdi->nYWindowSize	= 0;
 
-	pdlist->AddCurDialogueItem(pdi);
+	m_Dlist->AddCurDialogueItem(pdi);
 
+	m_Dlist->Start();
 
-	pdlist->Start();
-
-	lLastTimestamp = 0;
-
-	pdlist->AddCurStyle(style);
+	m_Dlist->AddCurStyle(style);
 
 	TCHAR testText[MAX_PATH] = {"我是Chinese, 字幕叠加测试中！"};
-	pdi = pdlist->GetCurDialogueItem();
-	pdi->pStyle = (DialogueStyle *)style;//sfd->pdlist->GetCurStyle();
+	pdi = m_Dlist->GetCurDialogueItem();
+	pdi->pStyle = (DialogueStyle *)style;//sfd->m_Dlist->GetCurStyle();
 	pdi->pDSD = (DialogueStyleDefinition *)style;
 
 	lstrcpy(pdi->text, TEXT("我是Chinese, 字幕叠加测试中！"));
@@ -136,8 +147,8 @@ void DisplaySubtitler::SelectStyle(const DialogueStyleDefinition* style)
 	pdi->nRightMargin = style->nRightMargin;
 	pdi->nBottomMargin = style->nBottomMargin;
 
-	pRender->Clear();//clear last rendernode
-	pRender->AddItem(pdi, pfc, m_CanvasWidth, m_CanvasHeight, hdcAntialias, fAntialias);
+	m_Render->Clear();//clear last rendernode
+	m_Render->AddItem(pdi, m_Pfc, m_CanvasWidth, m_CanvasHeight, m_HdcAntialias, m_Antialias);
 
 	m_bInit = true;
 }
@@ -146,8 +157,8 @@ void DisplaySubtitler::Render(int videoWidth, int videoHeight, int videoPitch, u
 {
 	static int loop = 0;
 
-	if (fAntialias)
-		pRender->RenderAntialiased(loop, videoWidth, videoHeight, videoPitch, videoBuffer, pfc, hdcAntialias);
+	if (m_Antialias)
+		m_Render->RenderAntialiased(loop, videoWidth, videoHeight, videoPitch, videoBuffer, m_Pfc, m_HdcAntialias);
 
 	GdiFlush();
 	_CrtCheckMemory();

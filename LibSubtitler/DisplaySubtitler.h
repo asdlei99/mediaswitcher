@@ -48,20 +48,12 @@ public:
 
 private:
 	bool m_bInit;
-	DialogueList *pdlist;
-	FontCache *pfc;
-	char szScript[MAX_PATH];
+	DialogueList *m_Dlist;
+	FontCache *m_Pfc;
 
-	RenderList *pRender;
-	int nRects, nRectMax;
-
-	HDC hdcAntialias;
-
-	long	lLastTimestamp;
-
-	bool	fAntialias;
-	bool	bAssumeGDISucks;
-	int		nWrapMode;
+	RenderList *m_Render;
+	HDC m_HdcAntialias;
+	bool	m_Antialias;
 
 	int m_CanvasWidth;
 	int m_CanvasHeight;
