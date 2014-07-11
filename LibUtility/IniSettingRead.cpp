@@ -19,15 +19,15 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #include "IniSettingRead.h"
 #include <windows.h>
 
-CIniSettingRead::CIniSettingRead(void)
+IniSettingRead::IniSettingRead(void)
 {
 }
 
-CIniSettingRead::~CIniSettingRead(void)
+IniSettingRead::~IniSettingRead(void)
 {
 }
 
-void	CIniSettingRead::getBufferSetting(int& size)
+void	IniSettingRead::GetBufferSetting(int& size)
 {
 	string strIniFile = INI_DEF_FILE;
 	getIniFileName(strIniFile);
@@ -36,7 +36,7 @@ void	CIniSettingRead::getBufferSetting(int& size)
 	size = ( nFlag > 0 && nFlag < 1000) ? nFlag : 1000;
 }
 
-void CIniSettingRead::getInitBufferSize(int& size)
+void IniSettingRead::GetInitBufferSize(int& size)
 {
 	string strIniFile = INI_DEF_FILE;
 	getIniFileName(strIniFile);
@@ -45,7 +45,7 @@ void CIniSettingRead::getInitBufferSize(int& size)
 	size = ( nFlag > 0 && nFlag < 1000) ? nFlag : 1000;	
 }
 
-void CIniSettingRead::getIniFileName(string& strIniFile)
+void IniSettingRead::GetIniFileName(string& strIniFile)
 {
 	char appfilePath[256];
 	if(::GetModuleFileName(NULL,appfilePath,256) == 0)
@@ -63,7 +63,7 @@ void CIniSettingRead::getIniFileName(string& strIniFile)
 }
 
 #define GETDVMODE(DV)\
-void   CIniSettingRead::get##DV##Mode(int& mode)\
+void   IniSettingRead::Get##DV##Mode(int& mode)\
 {\
 	string strIniFile = INI_DEF_FILE;\
 	getIniFileName(strIniFile);\
@@ -73,7 +73,7 @@ void   CIniSettingRead::get##DV##Mode(int& mode)\
 }\
 
 #define GETDVFILENAME(DV)\
-	void   CIniSettingRead::get##DV##FileName(string& filename)\
+	void   IniSettingRead::Get##DV##FileName(string& filename)\
 {\
 	string strIniFile = INI_DEF_FILE;\
 	getIniFileName(strIniFile);\
@@ -89,7 +89,7 @@ void   CIniSettingRead::get##DV##Mode(int& mode)\
 }\
 
 #define GETDVOUTPUTFILENAME(DV)\
-void   CIniSettingRead::get##DV##OutputFileName(string& filename)\
+void   IniSettingRead::Get##DV##OutputFileName(string& filename)\
 {\
 	string strIniFile = INI_DEF_FILE;\
 	getIniFileName(strIniFile);\
@@ -105,7 +105,7 @@ void   CIniSettingRead::get##DV##OutputFileName(string& filename)\
 }\
 
 #define GETDVOUTPUTMODE(DV)\
-void   CIniSettingRead::get##DV##OutputMode(int& mode)\
+void   IniSettingRead::Get##DV##OutputMode(int& mode)\
 {\
 	string strIniFile = INI_DEF_FILE;\
 	getIniFileName(strIniFile);\
@@ -132,7 +132,7 @@ GETDVOUTPUTMODE(DV1);
 GETDVOUTPUTMODE(DV2);
 GETDVOUTPUTMODE(DV3);
 
-void   CIniSettingRead::getLogMode(int& mode)
+void   IniSettingRead::GetLogMode(int& mode)
 {
 	string strIniFile = INI_DEF_FILE;
 	getIniFileName(strIniFile);
@@ -141,7 +141,7 @@ void   CIniSettingRead::getLogMode(int& mode)
 	mode = ( nFlag >= 0 && nFlag < 5) ? nFlag : 0;
 }
 
-void   CIniSettingRead::getSwitchOutputFileName(string& filename)
+void   IniSettingRead::GetSwitchOutputFileName(string& filename)
 {
 	string strIniFile = INI_DEF_FILE;
 	getIniFileName(strIniFile);

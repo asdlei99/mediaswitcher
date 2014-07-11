@@ -29,28 +29,28 @@ public:
 	IniSettingRead(void);
 	~IniSettingRead(void);
 
-	void	getBufferSetting(int& size);
-	void	getIniFileName(string& strIniFile);
-	void	getInitBufferSize(int& size);
+	void   GetBufferSetting(int& size);
+	void   GetIniFileName(string& strIniFile);
+	void   GetInitBufferSize(int& size);
 
-	void   getDV1Mode(int& mode);
-	void   getDV1FileName(string& filename);
-	void   getDV2Mode(int& mode);
-	void   getDV2FileName(string& filename);
-	void   getDV3Mode(int& mode);
-	void   getDV3FileName(string& filename);
-	void   getDV4Mode(int& mode);
-	void   getDV4FileName(string& filename);
-	void   getLogMode(int& mode);
+	void   GetDV1Mode(int& mode);
+	void   GetDV1FileName(string& filename);
+	void   GetDV2Mode(int& mode);
+	void   GetDV2FileName(string& filename);
+	void   GetDV3Mode(int& mode);
+	void   GetDV3FileName(string& filename);
+	void   GetDV4Mode(int& mode);
+	void   GetDV4FileName(string& filename);
+	void   GetLogMode(int& mode);
 
-	void   getDV1OutputMode(int& mode);
-	void   getDV2OutputMode(int& mode);
-	void   getDV3OutputMode(int& mode);
+	void   GetDV1OutputMode(int& mode);
+	void   GetDV2OutputMode(int& mode);
+	void   GetDV3OutputMode(int& mode);
 
-	void   getDV1OutputFileName(string& filename);
-	void   getDV2OutputFileName(string& filename);
-	void   getDV3OutputFileName(string& filename);
-	void   getSwitchOutputFileName(string& filename);
+	void   GetDV1OutputFileName(string& filename);
+	void   GetDV2OutputFileName(string& filename);
+	void   GetDV3OutputFileName(string& filename);
+	void   GetSwitchOutputFileName(string& filename);
 };
 
 #endif // __MUXINISETTINGREAD_H

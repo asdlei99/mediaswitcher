@@ -54,7 +54,7 @@ AppCtrl::AppCtrl(void)
 	m_LogMode  = 0;
 
 	IniSettingRead	iniFileReader;
-	iniFileReader.getLogMode(m_LogMode);
+	iniFileReader.GetLogMode(m_LogMode);
 
 	switch(m_LogMode)
 	{
@@ -208,104 +208,65 @@ bool AppCtrl::SignalShowEngine(BOOL signal)
 	}
 	return false;		
 }
+#define GETDVMODE(DV)\
+void  AppCtrl::Get##DV##Mode(int& mode)\
+{\
+	IniSettingRead	iniFileReader;\
+	int size = 0;\
+	iniFileReader.Get##DV##Mode(size);\
+	mode = size;\
+}\
 
-void  AppCtrl::GetDV1Mode(int& mode)
-{
-	IniSettingRead	iniFileReader;
-	int size = 0;
-	iniFileReader.getDV1Mode(size);
+#define GETDVFILENAME(DV)\
+void  AppCtrl::Get##DV##FileName(string& filename)\
+{\
+	string name ="";\
+	IniSettingRead	iniFileReader;\
+	iniFileReader.Get##DV##FileName(name);\
+	filename = name;\
+}\
 
-	mode = size;
-}
+#define GETDVOUTPUTFILENAME(DV)\
+void   AppCtrl::Get##DV##OutputFileName(string& filename)\
+{\
+	string name ="";\
+	IniSettingRead	iniFileReader;\
+	iniFileReader.Get##DV##OutputFileName(name);\
+	filename = name;\
+}\
 
-void  AppCtrl::GetDV1FileName(string& filename)
-{
-	string name ="";
-	IniSettingRead	iniFileReader;
-	iniFileReader.getDV1FileName(name);
-	filename = name;
-}
+#define GETDVOUTPUTMODE(DV)\
+void  AppCtrl::Get##DV##OutputMode(int& mode)\
+{\
+	IniSettingRead	iniFileReader;\
+	int size = 0;\
+	iniFileReader.Get##DV##OutputMode(size);\
+	mode = size;\
+}\
 
-void  AppCtrl::GetDV2Mode(int& mode)
-{
-	IniSettingRead	iniFileReader;
-	int size = 0;
-	iniFileReader.getDV2Mode(size);
+GETDVMODE(DV1);
+GETDVMODE(DV2);
+GETDVMODE(DV3);
+GETDVMODE(DV4);
 
-	mode = size;
-}
+GETDVFILENAME(DV1);
+GETDVFILENAME(DV2);
+GETDVFILENAME(DV3);
+GETDVFILENAME(DV4);
 
-void  AppCtrl::GetDV2FileName(string& filename)
-{
-	string name ="";
-	IniSettingRead	iniFileReader;
-	iniFileReader.getDV2FileName(name);
-	filename = name;
-}
+GETDVOUTPUTFILENAME(DV1);
+GETDVOUTPUTFILENAME(DV2);
+GETDVOUTPUTFILENAME(DV3);
 
-void  AppCtrl::GetDV3Mode(int& mode)
-{
-	IniSettingRead	iniFileReader;
-	int size = 0;
-	iniFileReader.getDV3Mode(size);
-
-	mode = size;
-}
-
-void  AppCtrl::GetDV3FileName(string& filename)
-{
-	string name ="";
-	IniSettingRead	iniFileReader;
-	iniFileReader.getDV3FileName(name);
-	filename = name;
-}
-
-void  AppCtrl::GetDV4Mode(int& mode)
-{
-	IniSettingRead	iniFileReader;
-	int size = 0;
-	iniFileReader.getDV4Mode(size);
-
-	mode = size;
-}
-
-void  AppCtrl::GetDV4FileName(string& filename)
-{
-	string name ="";
-	IniSettingRead	iniFileReader;
-	iniFileReader.getDV4FileName(name);
-	filename = name;
-}
-
-void   AppCtrl::GetDV1OutputFileName(string& filename)
-{
-	string name ="";
-	IniSettingRead	iniFileReader;
-	iniFileReader.getDV1OutputFileName(name);
-	filename = name;
-}
-
-void   AppCtrl::GetDV2OutputFileName(string& filename)
-{
-	string name ="";
-	IniSettingRead	iniFileReader;
-	iniFileReader.getDV2OutputFileName(name);
-	filename = name;
-}
-
-void   AppCtrl::GetDV3OutputFileName(string& filename)
-{
-	string name ="";
-	IniSettingRead	iniFileReader;
-	iniFileReader.getDV3OutputFileName(name);
-	filename = name;
-}
+GETDVOUTPUTMODE(DV1);
+GETDVOUTPUTMODE(DV2);
+GETDVOUTPUTMODE(DV3);
 
 void   AppCtrl::GetSwitchPathName(string& filename)
 {
 	string name ="";
 	IniSettingRead	iniFileReader;
-	iniFileReader.getSwitchOutputFileName(name);
+	iniFileReader.GetSwitchOutputFileName(name);
 	filename = name;
 }
 
@@ -348,32 +309,7 @@ void   AppCtrl::GetSwitchFileName(string& filename, bool flag)
 	m_OutputFileName = filename;
 }
 
-void  AppCtrl::GetDV1OutputMode(int& mode)
-{
-	IniSettingRead	iniFileReader;
-	int size = 0;
-	iniFileReader.getDV1OutputMode(size);
 
-	mode = size;
-}
-
-void  AppCtrl::GetDV2OutputMode(int& mode)
-{
-	IniSettingRead	iniFileReader;
-	int size = 0;
-	iniFileReader.getDV2OutputMode(size);
-
-	mode = size;
-}
-
-void  AppCtrl::GetDV3OutputMode(int& mode)
-{
-	IniSettingRead	iniFileReader;
-	int size = 0;
-	iniFileReader.getDV3OutputMode(size);
-
-	mode = size;
-}
 HRESULT   AppCtrl::SetTextSubtitleBuffer(unsigned char* buffer, int width, int height, int PosX, int PosY)
 {
 	return MultiPlayerSession::GetInstance().SetTextSubtitleBuffer(buffer, width, height, PosX, PosY);	
@@ -396,7 +332,6 @@ HRESULT AppCtrl::SetLogoShowFlag(BOOL showFlag)
 HRESULT  AppCtrl::InitialPlayerSession(HWND windowHandle)
 {
 	return 	MultiPlayerSession::GetInstance().Initialize(windowHandle);
-
 }
 
 HRESULT  AppCtrl::AddVideoFileSource(string sourceName, BOOL flag, WCHAR *wcPath, DWORD_PTR& dwID, GraphType& type)
